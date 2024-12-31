@@ -1,0 +1,15 @@
+<% layout('./layouts/boilerplate.ejs') %>
+
+<h1 class="mt-3">Bidya Restauraunt Guide:</h1>
+<div class="restaurants">
+    <% for(let rest of rests){ %>
+        <div class="card" style="width: 25rem;">
+            <img src="<%=rest.image%>" class="card-img-top" alt="">
+            <div class="card-body">
+              <h5 class="card-title"><%=rest.name%></h5>
+              <p class="card-text"><%= rest.description%></p>
+              <a href="" class="btn btn-primary"><%= rest.price  %>, <%= rest.location  %></a>
+            </div>
+          </div>
+        <% } %>
+</div>
