@@ -5,6 +5,7 @@ const ejsMate = require('ejs-mate')
 const path = require('path')
 const app = express();
 var Rest = require('./models/rest')
+var Review = require('./models/reviews')
 var AppError =require('./utils/AppError')
 var  {wrapAsync} =require('./utils/wrapAsync')
 var validateRest = require('./utils/schemas')
@@ -37,9 +38,24 @@ app.post('/home',validateRest,async(req,res)=>{
 })
 app.get('/home/:id',wrapAsync(async(req,res)=>{
     var restId = req.params.id;
-    var rest = await Rest.findById(restId)
+    var rest = await Rest.findById(restId).populate('reviews')
+    console.log(rest)
     res.render('pages/show',{rest})
 }))
+app.post('/home/:id/reviews',async(req,res)=>{
+    var restId = req.params.id;
+    const rest = await Rest.findById(restId)
+    const review = new Review(req.body.review)
+    rest.reviews.push(review)
+    await review.save()
+    await rest.save()
+    res.redirect(`/home/${restId}`)
+})
+app.delete('/home/:id/reviews/:revId',async(req,res)=>{
+    var {id, revId} = req.params;
+    await Review.findByIdAndDelete(revId)
+    res.redirect(`/home/${id}`)
+})
 app.get('/home/:id/edit',wrapAsync(async(req,res)=>{
     var restId = req.params.id;
     var rest = await Rest.findById(restId)
