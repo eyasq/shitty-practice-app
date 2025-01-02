@@ -5,6 +5,9 @@ const ejsMate = require('ejs-mate')
 const path = require('path')
 const app = express();
 var Rest = require('./models/rest')
+var AppError =require('./utils/AppError')
+var  {wrapAsync} =require('./utils/wrapAsync')
+var validateRest = require('./utils/schemas')
 app.engine('ejs',ejsMate)
 app.set('view engine','ejs')
 app.set('views',path.join(__dirname,'views'))
@@ -20,40 +23,55 @@ mongoose.connect('mongodb://localhost:27017/bidyaR')
     console.log(e,'mongo conn error')
 })
 
-app.get('/home',async(req,res)=>{
+app.get('/home',wrapAsync(async(req,res)=>{
     var rests = await Rest.find({})
     res.render('pages/home.ejs', {rests})
-})
+}))
 app.get('/new',(req,res)=>{
     res.render('pages/new.ejs')
 })
-app.post('/home',async(req,res)=>{
+app.post('/home',validateRest,async(req,res)=>{
     var rest =  new Rest(req.body.rest);
     await rest.save();
     res.redirect('/home')
 })
-app.get('/home/:id',async(req,res)=>{
+app.get('/home/:id',wrapAsync(async(req,res)=>{
     var restId = req.params.id;
     var rest = await Rest.findById(restId)
     res.render('pages/show',{rest})
-})
-app.get('/home/:id/edit',async(req,res)=>{
+}))
+app.get('/home/:id/edit',wrapAsync(async(req,res)=>{
     var restId = req.params.id;
     var rest = await Rest.findById(restId)
     res.render('pages/edit',{rest})
-})
-app.put('/home/:id',async(req,res)=>{
+}))
+app.put('/home/:id',validateRest,wrapAsync(async(req,res)=>{
     var restId = req.params.id;
     var restEdited = await Rest.findByIdAndUpdate(restId,req.body.rest,{new:true, runValidators:true})
     await restEdited.save();
     res.redirect(`/home/${restId}`)
-})
+}))
 app.delete('/home/:id/',async(req,res)=>{
 var {id} = req.params;
 await Rest.findByIdAndDelete(id)
 res.redirect('/home')
 })
-
+app.all('*',(req,res,next)=>{
+    throw new AppError('Page not found!',404)
+    next();
+})
+app.use((err,req,res,next)=>{
+    var {status = 500, message = 'Something went wrong!'} = err;
+    if(err.name == 'ValidationError'){
+        err.message = 'Validation Fail'
+        err.status = 400;
+    }
+    else if(err.name == 'CastError'){
+        err.message = 'Could not cast to this ID'
+        err.status = 400;
+    }
+    res.status(status).render('error.ejs',{err})
+})
 app.listen('3000',()=>{
 console.log('listening on 3000')
 })
