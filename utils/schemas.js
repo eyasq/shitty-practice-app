@@ -11,7 +11,7 @@ const validateRest = function(req,res,next){
         }).required()
 
     })
-    var res = restSchema.validate(req.body)
+    var res = restSchema.validate(req.body.rest)
     if(res.error){
         throw new AppError('Validation failed!',400)
     }
@@ -19,4 +19,21 @@ const validateRest = function(req,res,next){
         next()
     }
 }
-module.exports = validateRest;
+module.exports.validateRest = validateRest;
+
+const validateReview = function(req,res,next){
+    const reviewSchema = Joi.object({
+        review:Joi.object({
+            body:Joi.string().required(),
+            rating:Joi.number().required().min(0).max(10)
+        }).required()
+    })
+    var res = reviewSchema.validate(req.body.review)
+    if(res.error){
+        throw new AppError('Validation failed!',400)
+    }
+    else{
+        next()
+    }
+}
+module.exports.validateReview = validateReview;
