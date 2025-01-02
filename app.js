@@ -32,7 +32,27 @@ app.post('/home',async(req,res)=>{
     await rest.save();
     res.redirect('/home')
 })
-
+app.get('/home/:id',async(req,res)=>{
+    var restId = req.params.id;
+    var rest = await Rest.findById(restId)
+    res.render('pages/show',{rest})
+})
+app.get('/home/:id/edit',async(req,res)=>{
+    var restId = req.params.id;
+    var rest = await Rest.findById(restId)
+    res.render('pages/edit',{rest})
+})
+app.put('/home/:id',async(req,res)=>{
+    var restId = req.params.id;
+    var restEdited = await Rest.findByIdAndUpdate(restId,req.body.rest,{new:true, runValidators:true})
+    await restEdited.save();
+    res.redirect(`/home/${restId}`)
+})
+app.delete('/home/:id/',async(req,res)=>{
+var {id} = req.params;
+await Rest.findByIdAndDelete(id)
+res.redirect('/home')
+})
 
 app.listen('3000',()=>{
 console.log('listening on 3000')
