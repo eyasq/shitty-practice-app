@@ -19,12 +19,16 @@ router.get('/new',(req,res)=>{
 router.post('',validateRest,async(req,res)=>{
     var rest =  new Rest(req.body.rest);
     await rest.save();
-    req.flash('success','Succesffuly added restaurant')
+    req.flash('success','Successfully added Restaurant')
     res.redirect('/home')
 })
 router.get('/:id',wrapAsync(async(req,res)=>{
     var restId = req.params.id;
     var rest = await Rest.findById(restId).populate('reviews')
+    if(!rest){
+        req.flash('error','Cannot find this restaurant')
+        return res.redirect('/home')
+    }
     res.render('pages/show',{rest})
 }))
 
@@ -42,6 +46,7 @@ router.put('/:id',validateRest,wrapAsync(async(req,res)=>{
 router.delete('/:id/',async(req,res)=>{
 var {id} = req.params;
 await Rest.findByIdAndDelete(id)
+req.flash('success','Succesfully Deleted Review')
 res.redirect('/home')
 })
 

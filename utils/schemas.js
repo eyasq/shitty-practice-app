@@ -12,6 +12,7 @@ const validateRest = function(req,res,next){
 
     })
     var res = restSchema.validate(req.body)
+    var res = restSchema.validate(req.body)
     if(res.error){
         throw new AppError('Restaurant Validation failed!',400)
        

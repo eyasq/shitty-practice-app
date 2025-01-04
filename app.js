@@ -4,11 +4,11 @@ const methodOverride = require('method-override')
 const ejsMate = require('ejs-mate')
 const path = require('path')
 const app = express();
-var AppError = require('./utils/AppError')
+var AppError =require('./utils/AppError')
 const restRoutes = require('./routes/restRoutes')
 const reviewRoutes = require('./routes/reviewRoutes')
-var session = require('express-session')
-var flash = require('connect-flash');
+const session = require('express-session')
+const flash = require('connect-flash')
 app.engine('ejs',ejsMate)
 app.set('view engine','ejs')
 app.set('views',path.join(__dirname,'views'))
@@ -16,16 +16,6 @@ app.use(express.static(path.join(__dirname,'public')))
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(methodOverride('_method'))
-var sessionOptions = {
-    secret:'foobar',
-    cookie:{
-        httpOnly:true,
-        secure:true,
-
-    },
-    resave:false,
-    saveUninitialized:true
-}
 
 mongoose.connect('mongodb://localhost:27017/bidyaR')
 .then(()=>{
@@ -33,26 +23,22 @@ mongoose.connect('mongodb://localhost:27017/bidyaR')
 }).catch((e)=>{
     console.log(e,'mongo conn error')
 })
-const sessionConfig = {
-    secret:'SECRETKEYWORD',
-    saveUninitialized:true,
+var sessionConfig = {
+    secret: 'FooBar',
     resave:false,
-    cookies:{
-        expires: Date.now()+7*24*60*60*1000,
+    saveUninitialized:true,
+    cookie:{
         httpOnly:true,
-        maxAge: 1000*7*24*60*60
-        }
+        expires: Date.now()+1000*60*60*24,
+        maxAge:1000*60*60*24,
     }
-
+}
 app.use(session(sessionConfig))
 app.use(flash())
-
-
 app.use((req,res,next)=>{
-   res.locals.success = req.flash('success');
-   res.locals.error = req.flash('error')
-   console.log('req.flash: ', req.flash())
-   next()
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    next()
 })
 app.use('/home',restRoutes)
 app.use('/home/:id/reviews',reviewRoutes)
