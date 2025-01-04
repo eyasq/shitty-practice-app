@@ -19,12 +19,12 @@ router.get('/new',(req,res)=>{
 router.post('',validateRest,async(req,res)=>{
     var rest =  new Rest(req.body.rest);
     await rest.save();
+    req.flash('success','Succesffuly added restaurant')
     res.redirect('/home')
 })
 router.get('/:id',wrapAsync(async(req,res)=>{
     var restId = req.params.id;
     var rest = await Rest.findById(restId).populate('reviews')
-    console.log(rest)
     res.render('pages/show',{rest})
 }))
 

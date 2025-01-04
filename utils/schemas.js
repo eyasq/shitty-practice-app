@@ -11,13 +11,14 @@ const validateRest = function(req,res,next){
         }).required()
 
     })
-    var res = restSchema.validate(req.body.rest)
+    var res = restSchema.validate(req.body)
     if(res.error){
-        throw new AppError('Validation failed!',400)
+        throw new AppError('Restaurant Validation failed!',400)
+       
     }
     else{
         next()
-    }
+     }
 }
 module.exports.validateRest = validateRest;
 
@@ -28,12 +29,13 @@ const validateReview = function(req,res,next){
             rating:Joi.number().required().min(0).max(10)
         }).required()
     })
-    var res = reviewSchema.validate(req.body.review)
+    var res = reviewSchema.validate(req.body)
     if(res.error){
-        throw new AppError('Validation failed!',400)
+        throw new AppError('Review Validation failed!',400)
     }
     else{
         next()
+        console.log(req.body)
     }
 }
 module.exports.validateReview = validateReview;

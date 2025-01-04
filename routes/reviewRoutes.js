@@ -14,7 +14,9 @@ router.post('/',validateReview,wrapAsync(async(req,res)=>{
     rest.reviews.push(review)
     await review.save()
     await rest.save()
-    res.redirect(`/home/${restId}`)
+    req.flash('success','successfully added review')
+    console.log(req.flash())
+    res.redirect(`/home/${restId}`, )
 }))
 router.delete('/:revId',async(req,res)=>{
     var {id, revId} = req.params;
