@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const {Schema} = mongoose;
 const Review = require('./reviews')
+const User = require('./user')
 const restModel = new Schema({
     name:{
         type:String,
@@ -25,7 +26,12 @@ const restModel = new Schema({
     reviews:[{
         type: Schema.Types.ObjectId,
         ref:'Review'
-    }]
+    }],
+    author:{
+        type:Schema.Types.ObjectId,
+        ref: 'User'
+    }
+
 })
 restModel.post('findOneAndDelete',async(doc)=>{
     if(doc){

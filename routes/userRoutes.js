@@ -16,9 +16,8 @@ router.post("/register", async (req, res,next) => {
             return next(err)
         }
         req.flash("success", "Welcome!");
-        if(returnTo){
+        if(req.session.returnTo){
             return res.redirect(`${returnTo}`)
-
         }
         return res.redirect('/home')
     })
@@ -32,16 +31,13 @@ router.get("/login", (req, res) => {
   res.render("user/login");
 });
 
-router.post(
-  "/login",
-  passport.authenticate("local", {
+router.post("/login",passport.authenticate("local", {
     failureFlash: true,
     failureRedirect: "/login",
-    keepSessionInfo: true,
-  }),
-  (req, res) => {
+    keepSessionInfo: true,}),  (req, res) => {
     req.flash("success", "Successfully logged in");
-    res.redirect("/home");
+    const redirectUrl = req.session.returnTo || '/home'
+    res.redirect(redirectUrl);
   }
 );
 router.get("/logout", (req, res, next) => {

@@ -1,13 +1,22 @@
 var passport = require("passport");
-
+var Rest = require('../models/rest')
 const isLoggedIn = (req, res, next) => {
-    console.log('req.user from isLoggedIn:........',req.user)
   if (!req.isAuthenticated()) {
-    res.locals.returnTo = req.originalUrl;
+    req.session.returnTo = req.originalUrl;
     req.flash("error", "You must be signed in to view this page");
-    console.log("redirecting to original url");
-    return res.redirect("/home");
+    return res.redirect('/login');
   }
   next();
 };
 module.exports.isLoggedIn = isLoggedIn;
+
+const isOwner = async(req,res,next)=>{
+  const {id} = req.params;
+  const rest = await Rest.findById(id)
+  if(!rest.author._id.equals(req.user._id)){
+    req.flash('error','You are not the author of this listing')
+    return res.redirect(`/home/${id}`)
+  }
+  next()
+}
+module.exports.isOwner = isOwner;

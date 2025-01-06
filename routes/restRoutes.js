@@ -6,7 +6,7 @@ const AppError = require("../utils/AppError");
 const Review = require("../models/reviews");
 const Rest = require("../models/rest");
 const { validateRest } = require("../utils/schemas");
-const { isLoggedIn } = require("../utils/middleware");
+const { isLoggedIn, isOwner } = require("../utils/middleware");
 
 router.get(
   "",
@@ -20,6 +20,7 @@ router.get("/new", isLoggedIn, (req, res) => {
 });
 router.post("", validateRest, isLoggedIn, async (req, res) => {
   var rest = new Rest(req.body.rest);
+  rest.author = req.user._id;
   await rest.save();
   req.flash("success", "Successfully added Restaurant");
   res.redirect("/home");
@@ -28,18 +29,23 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     var restId = req.params.id;
-    var rest = await Rest.findById(restId).populate("reviews");
+    var rest = await Rest.findById(restId).populate({path:"reviews",populate:{
+      path:'author'
+    }}).populate('author');
     if (!rest) {
       req.flash("error", "Cannot find this restaurant");
       return res.redirect("/home");
     }
+    console.log('##########################')
+    console.log('user',req.user,'author', rest.author)
+    console.log('##########################')
     res.render("pages/show", { rest });
   })
 );
 
 router.get(
   "/:id/edit",
-  isLoggedIn,
+  isLoggedIn,isOwner,
   wrapAsync(async (req, res) => {
     var restId = req.params.id;
     var rest = await Rest.findById(restId);
@@ -49,7 +55,7 @@ router.get(
 router.put(
   "/:id",
   isLoggedIn,
-  validateRest,
+  validateRest,isOwner,
   wrapAsync(async (req, res) => {
     var restId = req.params.id;
     var restEdited = await Rest.findByIdAndUpdate(restId, req.body.rest, {
@@ -60,10 +66,10 @@ router.put(
     res.redirect(`/home/${restId}`);
   })
 );
-router.delete("/:id/", isLoggedIn, async (req, res) => {
+router.delete("/:id/", isLoggedIn,isOwner, async (req, res) => {
   var { id } = req.params;
   await Rest.findByIdAndDelete(id);
-  req.flash("success", "Succesfully Deleted Review");
+  req.flash("success", "Succesfully Deleted Restaurant");
   res.redirect("/home");
 });
 

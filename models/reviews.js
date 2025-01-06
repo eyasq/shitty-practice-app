@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const {Schema} = mongoose;
-
+const User = require('./user')
 const reviewSchema = new Schema({
     body:{
         type:String,
@@ -11,6 +11,10 @@ const reviewSchema = new Schema({
         required:(true,'Review cannot have no score'),
         min:0,
         max:10
+    },
+    author:{
+        type:Schema.Types.ObjectId,
+        ref:'User'
     }
 })
 module.exports = mongoose.model('Review',reviewSchema)
