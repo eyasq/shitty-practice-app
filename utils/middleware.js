@@ -1,5 +1,6 @@
 var passport = require("passport");
 var Rest = require('../models/rest')
+const Review = require('../models/reviews')
 const isLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
@@ -14,9 +15,20 @@ const isOwner = async(req,res,next)=>{
   const {id} = req.params;
   const rest = await Rest.findById(id)
   if(!rest.author._id.equals(req.user._id)){
-    req.flash('error','You are not the author of this listing')
+    req.flash('error','You are not the author of this listing!')
     return res.redirect(`/home/${id}`)
   }
   next()
 }
 module.exports.isOwner = isOwner;
+
+const isOwnerReview = async(req,res,next)=>{
+  const {id} = req.params;
+  const review = await Review.findById(id)
+  if(!review.author._id.equals(req.user._id)){
+    req.flash('error','You are not the author of this Review!')
+    return res.redirect(`/home/${id}`)
+  }
+  next()
+}
+module.exports.isOwnerReview = isOwnerReview;
