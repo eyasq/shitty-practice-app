@@ -34,8 +34,19 @@
         <h2>Leave a Review</h2>
         <form action="/home/<%=rest._id%>/reviews" method="POST" class="mb-3 validated-form" novalidate>
             <div class="mb-3">
-                <label class="form-label" for="rating">Rating</label>
-                <input class="form-range" type="range" min="1" max="5" name="review[rating]" id="rating">
+                <fieldset class="starability-fade">
+                    <legend> Rate this Restauraunt:</legend>
+                    <input name="review[rating]" type="radio" id="first-rate1" value="1" />
+                    <label for="first-rate1" >1 star</label>
+                    <input name="review[rating]" type="radio" id="first-rate2" value="2" />
+                    <label for="first-rate2" >2 stars</label>
+                    <input name="review[rating]" type="radio" id="first-rate3" value="3" />
+                    <label for="first-rate3" >3 stars</label>
+                    <input name="review[rating]" type="radio" id="first-rate4" value="4" />
+                    <label for="first-rate4" >4 stars</label>
+                    <input name="review[rating]" type="radio" id="first-rate5" value="5" />
+                    <label for="first-rate5" >5 stars</label>
+                  </fieldset>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="body">Review</label>
@@ -50,8 +61,8 @@
         <% for(let review of rest.reviews) { %>
         <div class="card mb-3 ">
             <div class="card-body">
-                <h5 class="card-title">Rating: <%= review.rating %></h5>
-                <p class="card-text">Review: <%= review.body %></p>
+                <p class="starability-result" data-rating="<%=review.rating%>">
+                    <p class="card-text">Review: <%= review.body %></p>
                 <p class="text-muted">Posted By: <%= review.author.username %></p>
               <%  if(currentUser && currentUser._id.equals(review.author._id)){ %> 
                 <form action="/home/<%=rest._id%>/reviews/<%=review._id%>?_method=DELETE" method="POST">
