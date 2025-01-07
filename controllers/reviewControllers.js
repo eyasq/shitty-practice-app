@@ -2,6 +2,7 @@ const Review = require('../models/reviews')
 const {validateReview}  = require('../utils/schemas')
 const {isLoggedIn,isOwnerReview} =require('../utils/middleware')
 const {wrapAsync} = require('../utils/wrapAsync')
+const Rest = require('../models/rest')
 module.exports.postReview = [validateReview,isLoggedIn,wrapAsync(async(req,res)=>{
     var restId = req.params.id;
     const rest = await Rest.findById(restId)

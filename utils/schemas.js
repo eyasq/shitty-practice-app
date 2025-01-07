@@ -36,7 +36,6 @@ const validateReview = function(req,res,next){
     }
     else{
         next()
-        console.log(req.body)
     }
 }
 module.exports.validateReview = validateReview;

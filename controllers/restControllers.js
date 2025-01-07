@@ -2,14 +2,15 @@ const {wrapAsync} = require('../utils/wrapAsync')
 const Rest = require('../models/rest')
 const {isLoggedIn, isOwner} = require('../utils/middleware')
 const {validateRest,validateReview} = require('../utils/schemas')
+module.exports.getNewRest =[isLoggedIn, (req, res) => {
+  res.render("pages/new.ejs");
+}]
+
 module.exports.showRests =  wrapAsync(async (req, res) => {
     var rests = await Rest.find({});
     res.render("pages/home.ejs", { rests });
   })
 
-module.exports.getNewRest =[isLoggedIn, (req, res) => {
-    res.render("pages/new.ejs");
-  }]
 
 module.exports.postNewRest =[isLoggedIn,validateRest, wrapAsync(async (req, res) => {
   var rest = new Rest(req.body.rest);

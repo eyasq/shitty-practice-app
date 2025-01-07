@@ -23,8 +23,8 @@ const isOwner = async(req,res,next)=>{
 module.exports.isOwner = isOwner;
 
 const isOwnerReview = async(req,res,next)=>{
-  const {id} = req.params;
-  const review = await Review.findById(id)
+  const {revId} = req.params;
+  const review = await Review.findById(revId)
   if(!review.author._id.equals(req.user._id)){
     req.flash('error','You are not the author of this Review!')
     return res.redirect(`/home/${id}`)

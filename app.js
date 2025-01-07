@@ -50,17 +50,20 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  console.log(req.session)
   next();
 });
+
 app.use("/home", restRoutes);
 app.use("/home/:id/reviews", reviewRoutes);
 app.use("", userRoutes);
-
+app.get('home/new', (req, res) => {
+  res.render("pages/new.ejs");
+})
 app.all("*", (req, res, next) => {
   throw new AppError("Page not found!", 404);
   next();
 });
+
 app.use((err, req, res, next) => {
   var { status = 500, message = "Something went wrong!" } = err;
   if (err.name == "ValidationError") {

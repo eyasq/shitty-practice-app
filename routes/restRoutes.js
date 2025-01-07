@@ -5,13 +5,11 @@ const {postNewRest, showRests, getNewRest,showRest, showEdit, putEdit, destroyRe
 router.route('')
   .get(showRests)
   .post(postNewRest);
-
+router.get("/new", getNewRest);
 router.route('/:id')
   .get(showRest)
   .put(putEdit)
   .delete(destroyRest);
-
-router.get("/new", getNewRest);
 router.get("/:id/edit",showEdit);
 
 module.exports = router;
