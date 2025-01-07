@@ -1,5 +1,5 @@
 <% layout('./layouts/boilerplate.ejs') %>
-    <form method="post" action="/home">
+    <form method="post" action="/home" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">Restaurant Name:</label>
             <input type="text" class="form-control" id="name" placeholder="Enter Restaurant Name" name="rest[name]">
@@ -21,8 +21,9 @@
             <textarea class="form-control" id="description" rows="3" name="rest[description]"></textarea>
         </div>
         <div class="form-group">
-            <label for="image">Restaurant Image</label>
-            <input type="text" class="form-control" id="image" placeholder="Enter Image URL" name="rest[image]">
+            <input type="file" name="rest[image]" id="image" multiple>
+             <label for="image">Restaurant Image</label>
+          <!--  <input type="text" class="form-control" id="image" placeholder="Enter Image URL" name="rest[image]"> -->
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>

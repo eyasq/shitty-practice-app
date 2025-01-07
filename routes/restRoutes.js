@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {postNewRest, showRests, getNewRest,showRest, showEdit, putEdit, destroyRest} = require('../controllers/restControllers')
+const multer = require('multer')
+const upload = multer({dest:'uploads/'});
 
 router.route('')
   .get(showRests)

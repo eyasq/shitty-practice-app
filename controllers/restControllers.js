@@ -2,6 +2,8 @@ const {wrapAsync} = require('../utils/wrapAsync')
 const Rest = require('../models/rest')
 const {isLoggedIn, isOwner} = require('../utils/middleware')
 const {validateRest,validateReview} = require('../utils/schemas')
+const multer = require('multer')
+const upload = multer({dest:'uploads/'});
 module.exports.getNewRest =[isLoggedIn, (req, res) => {
   res.render("pages/new.ejs");
 }]
@@ -12,12 +14,14 @@ module.exports.showRests =  wrapAsync(async (req, res) => {
   })
 
 
-module.exports.postNewRest =[isLoggedIn,validateRest, wrapAsync(async (req, res) => {
-  var rest = new Rest(req.body.rest);
-  rest.author = req.user._id;
-  await rest.save();
-  req.flash("success", "Successfully added Restaurant");
-  res.redirect("/home");
+module.exports.postNewRest =[upload.array('rest[image]'),isLoggedIn, wrapAsync(async (req, res) => {
+  // var rest = new Rest(req.body.rest);
+  // rest.author = req.user._id;
+  // await rest.save();
+  // req.flash("success", "Successfully added Restaurant");
+  // res.redirect("/home");
+  console.log(req.body, req.files)
+  res.redirect('/home')
 })]
 
 module.exports.showRest = wrapAsync(async (req, res) => {
