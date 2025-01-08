@@ -19,10 +19,16 @@ const restModel = new Schema({
         type:String,
         required:[true,'Description cannot be empty']
     },
-    image:{
-        type:String,
-        required:[true,'Image cannot be empty']
-    },
+    images:[{
+        url:{
+            type:String,
+            required:[true,'Image URL cannot be empty']
+        },
+        filename:{
+            type:String,
+            required:[true,'Filename cannot be empty']
+        }
+    }],
     reviews:[{
         type: Schema.Types.ObjectId,
         ref:'Review'

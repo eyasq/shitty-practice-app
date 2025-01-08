@@ -7,7 +7,7 @@ const validateRest = function(req,res,next){
             price:Joi.number().required().min(0),
             location:Joi.string().required(),
             description:Joi.string().required(),
-            image:Joi.string().required()
+            // images:Joi.string().required()
         }).required()
 
     })

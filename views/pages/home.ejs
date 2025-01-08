@@ -4,7 +4,7 @@
 <div class="restaurants">
     <% for(let rest of rests){ %>
         <div class="card m-3 col-6 offset-3" style="width: 35rem; " >
-            <img src="<%=rest.image%>" class="card-img-top" alt="restaurant image" style="max-width: 40rem; max-height: 25rem; object-fit: cover;">
+            <img src="<%= rest.images[0].url %>" class="card-img-top" alt="restaurant image" style="max-width: 40rem; max-height: 25rem; object-fit: cover;">
             <div class="card-body">
               <h5 class="card-title"><%=rest.name%></h5>
               <p class="card-text"><%= rest.description%></p>
