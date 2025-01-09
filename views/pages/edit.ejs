@@ -1,0 +1,31 @@
+<% layout('./layouts/boilerplate.ejs') %>
+    <form method="post" action="/home/<%=rest._id%>?_method=PUT" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Restaurant Name:</label>
+            <input type="text" class="form-control" id="name" placeholder="Enter Restaurant Name" name="rest[name]"value="<%=rest.name%>">
+        </div>
+        <div class="form-group">
+            <label for="location">Restaurant Location</label>
+            <input type="text" class="form-control" id="location" placeholder="Enter Location"
+                name="rest[location]"value="<%=rest.location%>">
+        </div>
+        <div class="form-group">
+            <label for="price">Restaurant Avg Rate</label>
+            <div class="input-group-prepend">
+                <div class="input-group-text">$</div>
+                <input type="number" class="form-control" id="price" placeholder="Enter Price" name="rest[price]"value="<%=rest.price%>">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="description">Restaurant Description</label>
+            <textarea class="form-control" id="description" rows="3" name="rest[description]"><%=rest.description%></textarea>
+        </div>
+        <div class="form-group">
+            <div class="mb-3">
+                <label for="formFile" class="form-label">Restaurant Image</label>
+                <input class="form-control" type="file" id="formFile" multiple name="rest[image]">
+              </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Edit</button>
+    </form>
+    
